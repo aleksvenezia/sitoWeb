@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <title>mondoLibri</title>
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="css/bootstrap.min.css" >
+<link rel="stylesheet" href="style.css" >
+<link rel="stylesheet" href="mobile.css" >
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<script type="text/javascript">
+
+sessionStorage.setItem('nome', 'value');
+
+var data = sessionStorage.getItem('nome');
+
+var initialLocation;
+var siberia = new google.maps.LatLng(60, 105);
+var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+var map;
+var infowindow = new google.maps.InfoWindow();
+var mapOptions = {
+  zoom: 13,
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+};
+
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(showPosition, onError);
+  navigator.geolocation.watchPosition(showPosition);
+} else {
+  onError();
+}
+
+function showPosition(position) {
+  map = new google.maps.Map(document.getElementById("content"), mapOptions);
+
+  var lat = position.coords.latitude;
+  var lng = position.coords.longitude;
+
+  initialLocation = new google.maps.LatLng(lat, lng);
+  map.setCenter(initialLocation);
+  infowindow.setContent(lat + " " + lng);
+  infowindow.setPosition(initialLocation);
+  infowindow.open(map);
+}
+
+function onError() {
+  if (navigator.geolocation) {
+    initialLocation = newyork;
+    contentString = "Error: The Geolocation service failed.";
+  } else {
+    initialLocation = siberia;
+    contentString = "Error: Your browser doesn't support geolocation. Are you in Siberia?";
+  }
+  mapOptions.zoom = 4;
+  map = new google.maps.Map(document.getElementById("content"), mapOptions);
+  map.setCenter(initialLocation);
+  infowindow.setContent(contentString);
+  infowindow.setPosition(initialLocation);
+  infowindow.open(map);
+}
+  function geo() {
+navigator.geolocation.getCurrentPosition(mostraPosizione, errore);
+}
+function mostraPosizione(luogo) {
+alert("La tua latitudine: " + luogo.coords.latitude);
+alert("La tua longitudine : " + luogo.coords.longitude);
+}
+function errore(err) {
+alert("accetta per un miglior funzionamento");
+}
+</script>
+
+<script type="text/javascript">
+  var totale=0;
+  function start(event){
+      event.dataTransfer.setData("pippo", event.target.id); //event è l ogetto che noi trasciniao, datatransfer ecc crea una variabile di nome pippo che contiene l id dell ogetto trascinato
+  }
+  function entra(event){
+    event.preventDefault(); //devo sempre e solo mettere questa cosa nella funzione dell' ondragover
+
+  }
+  function fine(event){
+    event.preventDefault(); //qui l'abbiamo stopaato cosi non si apre l'immagine automaticamente
+    var data = event.dataTransfer.getData("pippo"); //nella variabile data ho messo l'ogetto
+    var oggetto= document.getElementById(data); //ho preso l'id
+    var descrizione=oggetto.getAttribute("data-descrizione");
+    var prezzo=oggetto.getAttribute("data-prezzo");
+    var pathFoto=oggetto.getAttribute("src");
+
+    totale=totale + parseFloat(prezzo); //ho creato una var per il totale
+    var mioCestino=document.createElement("img");
+    mioCestino.setAttribute("src","img/cestino.png");
+    mioCestino.setAttribute("class","cestino");
+
+    var divCestino=document.createElement("li");
+    var nuovoOggetto=document.createElement("li"); //creo un elmento nell'elenco
+    nuovoOggetto.innerHTML=descrizione + " - " + prezzo //visualizza e aggiunge descriione piu il prezzo
+
+    var anteprima=document.createElement("img");
+    anteprima.setAttribute("src",pathFoto);
+    anteprima.setAttribute("class","antep");
+    anteprima.setAttribute("draggable",true);
+    anteprima.setAttribute("ondragstart","prova(event)");
+    nuovoOggetto.appendChild(anteprima);
+
+
+    var mioDiv=document.getElementById("tot");
+    mioDiv.innerHTML=totale.toFixed(2)+"€";
+
+    var mioElenco= document.getElementById("elenco");
+    mioElenco.appendChild(nuovoOggetto);
+
+
+
+  }
+
+  function spesaTotale(){
+    alert ("il totale è di euro " + totale)
+  }
+
+</script>
+  </head>
+  <body>
+    <div class="libri">
+<img id="quadro" src="img/quadro.jpg" alt="">
+
+    </div>
+<div class="navigazione">
+
+
+    <nav class="navbar navbar-inverse " style="height:90px;"
+      <img src="img/cartina.jpg" style="height:80px; margin-left: 10px; margin-bottom:5px; margin-top:5px;">
+  <div class="container"  >
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header" >
+      <button type="button"  class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+</div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+      <ul class="nav navbar-nav">
+        <li class="active" style="margin: 10px 10px 10px 10px; color:white">home <span class="sr-only">(current)</span></li>
+          <li class="active" style="color:white; margin: 10px 10px 10px 10px;">info <span class="sr-only">(current)</span></li>
+
+        <li class="dropdown">
+          <a  style="background-color:black;" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">tipologia <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li>romanzi</li>
+            <li>gialli</li>
+            <li>drammatici</li>
+            <li>storici</li>
+          </ul>
+        </li>
+      </ul>
+</div>
+
+
+    </div><!-- /.navbar-collapse -->
+
+<br><br><br><br><br><br>
+    </div>
+
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div style="height:40%; width:40%; margin-left:150px; display:inline-block; "  id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+    <div class="item active" style="background-image: url(img/libro1.jfif); background-repeat:no-repeat;">
+      <div class="carousel-caption">
+
+      </div>
+    </div>
+    <div class="item" style="background-image: url(img/libro2.jpg);  background-repeat:no-repeat;">
+      <div class="carousel-caption">
+
+      </div>
+    </div>
+    <div class="item" style="background-image: url(img/libro3.jpg);  background-repeat:no-repeat;">
+      <div class="carousel-caption">
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+<div class="dst" style="height:90%; width:40%; display:inline-block; float:right;">
+
+
+<div class="contenitore" class="col-lg-2" style="border:solid black 5px;  margin-right: 200px; display:inline-block; float:right; ">
+  <form class="form-horizontal" style="margin-top:0px; margin-left:40px; margin-right:10px;">
+    <div class="form-group">
+      <h3 onloadedmetadata="" style="margin-right:80px;">ACCEDI</h3>
+      <a href="#">Inbox <span class="badge">42</span></a>
+
+<button class="btn btn-primary" type="button" style="margin-bottom:20px;">
+  Messages <span class="badge">5</span>
+</button>
+      <label for="inputEmail3" class="col-sm-2 control-label" style="margin-top:20px;"  >Email</label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+      <br>
+      <br>
+      <div class="col-sm-10">
+        <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox"> Remember me
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button  style="background-color:#1589FF;" type="submit" class="btn btn-default" onclick="accedi()">ACCEDI</button>
+      </div>
+    </div>
+
+  </form>
+
+</div>
+
+
+</div>
+<div id="content" style="height: 100px"></div>
+
+
+<br><br><br>
+<div class="container">
+  <div  class="col-md-3 col-">
+    <h3>Perchè leggere?</h3>
+
+  </div>
+  <div class="col-md-3 col-">
+    <h3>LEGGERE: significato</h3>
+  </div>
+  <div class="col-md-3 col-">
+    <h3>cosa leggere?</h3>
+  </div>
+  <div class="row">
+
+
+
+  </div>
+  <br><br>
+  <div class="row">
+    <div class="col-md-3 col-" style="margin-left:25px; text-align:center; font-size:20px;" >
+
+      Qualsiasi cosa tu legga si aggiungerà al tuo bagaglio culturale, ampliandolo e ti tornerà utile quando meno te l’aspetti.
+      Più conoscenze hai, più sarai pronto ad affrontare le sfide che la vita ti presenta
+    </div>
+
+
+
+    <div class="col-md-3 col-" >
+      Leggere <br> <br>
+/lèg·ge·re/
+verbo transitivo <br>
+1.
+Interpretare un sistema di scrittura in modo da decifrare parole e frasi: l. l'alfabeto; anche assol..
+"imparare a l." <br>
+2.
+Decifrare un testo scritto comprendendone i contenuti: l. un libro, una poesia;
+
+  </div>
+  <div class="col-md-3 col " class="col-lg-2"style="margin-left:35px;">Quali migliori tra i libri da leggere se non quelli in cima alle classifiche di vendita. Nello specifico quelli più venduti in Italia,
+    chiaramente. Oggi quindi vogliamo dare un’occhiata insieme ai libri usciti in questo ultimo periodo e scremare i mediocri
+      </div>
+  </div>
+
+
+
+
+  <div class="row">
+    <div class="col-md-2">
+    Quando leggi un libro, devi ricordarti di un certo numero di personaggi, dei loro retroscena, delle loro ambizioni, delle loro storie e sfumature, dato che tutti i dettagli s’intrecciano con la trama. Anche la memoria ha un limite, ma il cervello è qualcosa di meraviglioso e può ricordare tutto
+
+
+
+  </div>
+  <div class="col-md-2"> inoltre esporsi pubblicamente, scrivere bene a lavoro ha un effetto notevole sulla propria capacità di scrittura. Per quanto riguarda la cadenza,
+    la fluidità e lo stile di scrittura di altri autori, la lettura influenzerà il tuo lavoro personale.
+
+
+</div>
+<div class="superiore">
+  <img src="img/penna.jfif" alt="indicazioni" style="width:50%; height:10%; margin-left: 30px; display:inline-block;border-radius:30px;">
+</div>
+<div class="col-md-3">
+
+</div>
+<div class="col-md-7">
+
+</div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
+
+  </div>
+
+
+  <div class="col-xs-6">“Ogni lettore, quando legge, legge se stesso”
+
+(Marcel Proust)
+  </div>
+  <div class="col-xs-6">“Talvolta penso che il paradiso sia leggere continuamente, senza fine.”
+
+(Virginia Woolf)
+  </div>
+</div>
+  </div>
+<hr style="margin: 10px 10px 10px 100px;
+width:80%;">
+
+<div class="immagini">
+
+
+<img src="img/cuore.jfif" alt="venezia" class="img-rounded">
+<img src="img/foglio.jfif" style="margin-left:30px;"alt="napoli" class="img-circle">
+</div>
+
+<div id="container" style="margin-left:20px;">
+  <div id="sinistro" style="margin: 10px 10px 10px 10px 10px;">
+    <h1 style="font-family:cursive; width:100%;">OFFERTE</h1>
+    <div class="riga">
+      <img style="display:inline-block;  margin-top:50px;" id="foto1" src="img/conte.jfif" data-descrizione="Conte di Montecristo" data-prezzo="15,70€" alt="" draggable="true" ondragstart="start(event)">
+      <p style="display:inline-block;" class="descr">15,70€</p>
+      </div>
+
+      <div class="riga">
+      <img style="display:inline-block;  margin-top:50px; margin-right:15px;" id="foto2" src="./img/delitto.jfif" alt="" draggable="true" ondragstart="start(event)" data-descrizione="Delitto e Castigo" data-prezzo="15€">
+      <p style="display:inline-block;" class="descr">15€</p>
+
+      </div>
+
+      <div class="riga">
+      <img style="display:inline-block; margin-top:90px;"  id="foto3" src="./img/1984.jfif" draggable="true" alt="" ondragstart="start(event)" data-descrizione="1984" data-prezzo="12,90€">
+      <p style="display:inline-block;"class="descr">12,90€</p>
+      </div>
+
+
+      <div id="invio" >
+
+      <div class="riga" style="display:inline-block;">
+        <img style="display:inline-block; margin-top:90px;" id="foto4" src="img/orgoglio.jfif"   alt="" draggable="true" ondragstart="start(event)" data-descrizione="orgoglio e pregiudizio" data-prezzo="21,60€">
+        <p style="display:inline-block;" class="descr">21,60€</p>
+      </div>
+      <br>
+      <div style="display:inline-block; "class="riga">
+        <img style="display:inline-block;  margin-top:120px;" id ="foto5" src="img/cime.jfif" draggable="true" alt="" draggable="true" ondragstart="start(event)" data-descrizione="Cime Tempestose" data-prezzo="17,80€">
+        <p style="display:inline-block;" class="descr">17,80€</p>
+
+      </div>
+      <div style="display:inline-block;"class="riga">
+        <img style="display:inline-block; margin-top:120px; margin-right:14px;" id="foto6" src="img/ilProcesso.jfif"  draggable="true" alt=""  ondragstart="start(event)" data-descrizione="il Processo" data-prezzo="19€">
+        <p style="display:inline-block;" class="descr">19€</p>
+      </div>
+
+    </div>
+  </div>
+  <div id="destro" ondragover="entra(event)" ondrop="fine(event)" >
+    <div>
+      <p id="testo" style="display:inline-block; font-family: monospace;"> CARRELLO </p>
+      <img src="img/carrello.jpg" alt="" style="width:15%; display:inline-block;">
+      <hr>
+      <p>
+        <ol id="elenco">
+
+        </ol>
+        <br>
+        <div id="tot"></div>
+      <button type="cassa" name="button" onclick="spesaTotale()">CASSA</button>
+      </p>
+        <img src="img/cestino.png" style="width:15%; float:right; margin: 50px 10px 10px 10px;"  alt="">
+    </div>
+  </div>
+</div>
+  </div>
+
+</div>
+
+<div style="margin:10px 10px 10px 10px;" class="panel panel-default">
+  <div  class="panel-body">
+  </div>
+  <div style="text-align:center;" class="panel-footer">per info 375829955</div>
+</div>
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" ></script>
+<script src="js/bootstrap.min.js"> </script>
+  </body>
+</html>
